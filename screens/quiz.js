@@ -65,6 +65,7 @@ const Quiz = ({navigation}) => {
     <View style={styles.container}>
       {questions&& (
       <View style={styles.parent}>
+        <Text style={styles.secondaryText}>QUESTION {ques+1} OF 10</Text>
       <View style={styles.top}>
         <Text style={styles.question}>{decodeURIComponent(questions[ques].question)}</Text>
       </View>
@@ -83,9 +84,6 @@ const Quiz = ({navigation}) => {
           </TouchableOpacity>
       </View>
       <View style={styles.bottom}>
-        {/*<TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>SKIP</Text>
-      </TouchableOpacity>*/}
 
     {ques !== 9 &&
         <TouchableOpacity style={styles.button} onPress={handleNextPress}>
@@ -107,11 +105,13 @@ export default Quiz
 const styles = StyleSheet.create({
   container: {
     paddingTop: 40,
-    paddingHorizontal: 20,
+    paddingBottom:10,
+    paddingHorizontal: 10,
     height: '100%',
+    backgroundColor: '#648DE5'
   },
   top: {
-    marginVertical: 16
+    marginVertical: 5
   },
   options: {
     marginVertical: 16,
@@ -124,12 +124,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row'
   },
   button: {
-    backgroundColor: '#1A759F',
+    backgroundColor: '#648DE5',
     padding: 12,
     paddingHorizontal: 16,
     borderRadius: 16,
     alignItems: 'center',
     marginBottom: 30,
+    width: '100%'
   },
   buttonText: {
     fontSize: 18,
@@ -147,12 +148,21 @@ const styles = StyleSheet.create({
   optionButton: {
     paddingVertical: 12,
     marginVertical: 6,
-    backgroundColor: '#34A0A4',
+    backgroundColor: '#648DE5',
     paddingHorizontal: 12,
     borderRadius: 12,
   },
   parent:{
     height: '100%',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 30,
+    padding: 20
+
+  },
+  secondaryText: {
+    fontSize: 15,
+    color: '#a6a6a6',
+    fontWeight: 'bold'
   }
 
 })

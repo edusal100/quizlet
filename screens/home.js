@@ -1,19 +1,23 @@
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 import React from 'react'
-import Title from '../components/title'
+import { StatusBar } from 'expo-status-bar'
 
 const Home = ({navigation}) => {
   return (
     <View style={styles.container}>
-      <Title titleText='Quizlet'/>
       <View style={styles.bannerContainer}>
-            <Image source={{uri:'https://cdni.iconscout.com/illustration/premium/thumb/giving-different-feedback-and-review-in-websites-2112230-1779230.png'}} 
+            <Image source={require('../assets/mainLogo.png')}
             style={styles.banner} resizeMode='contain'/>
       </View>
+      <View style={styles.bottomContainer}>
+        <Text style={styles.bottomMsg}>This is Quizlet</Text>
       <TouchableOpacity onPress={() => navigation.navigate("Quiz")} style={styles.button}>
         <Text style={styles.buttonText}>Start</Text>
       </TouchableOpacity>
+      <Text style={styles.secondaryText}>By continuing you agree to have a damn fun</Text>
+      <StatusBar style='light'/>
+      </View>
     </View>
   )
 }
@@ -22,8 +26,8 @@ export default Home
 
 const styles = StyleSheet.create({
     banner: {
-        height: 300,
-        width: 300
+        height: 400,
+        width: 400
     },
     bannerContainer: {
       justifyContent: 'center',
@@ -32,21 +36,41 @@ const styles = StyleSheet.create({
     },
     container: {
       paddingTop: 40,
-      paddingHorizontal: 20,
+      paddingHorizontal: 10,
       height: '100%',
+      backgroundColor: '#648DE5'
     },
     button: {
       widht: '100%',
-      backgroundColor: '#1A759F',
+      backgroundColor: '#648DE5',
       padding: 16,
-      borderRadius: 16,
+      borderRadius: 22,
       alignItems: 'center',
-      marginBottom: 30,
+      marginBottom: 15,
+      marginTop: 30
     },
     buttonText: {
       fontSize: 24,
       fontWeight: '600',
-      color: 'white',
+      color: '#F8F8F9',
+    },
+    bottomContainer: {
+      backgroundColor:"#F8F8F9",
+      margin: 10,
+      padding: 15,
+      borderRadius: 20,
+      marginVertical: 15,
+    },
+    bottomMsg: {
+      fontWeight: 'bold',
+      fontSize: 24,
+      marginHorizontal: 20,
+      alignSelf: 'center'
+    },
+    secondaryText: {
+      fontSize: 15,
+      color: '#a6a6a6',
+      alignSelf: 'center'
     }
 
 })

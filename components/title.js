@@ -15,7 +15,8 @@ export default Title
 const styles = StyleSheet.create({
   title: {
     fontSize: 36,
-    fontWeight: '600'
+    fontWeight: '600',
+    color:'white'
   },
   container: {
     paddingVertical: 16,

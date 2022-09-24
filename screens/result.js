@@ -40,6 +40,7 @@ container: {
   paddingTop: 40,
   paddingHorizontal: 20,
   height: '100%',
+  backgroundColor: '#648DE5'
 },
 button: {
   widht: '100%',

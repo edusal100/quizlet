@@ -1,8 +1,7 @@
-import { StyleSheet, View } from 'react-native'
-
 import MyStack from './navigation'
 import { NavigationContainer } from '@react-navigation/native'
 import React from 'react'
+import { StyleSheet } from 'react-native'
 
 const App = () => {
   return (
