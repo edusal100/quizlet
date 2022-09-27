@@ -1,5 +1,5 @@
+import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 const shuffleArray = (array) => {
   for (let i = array.length - 1; i > 0; i--) {
@@ -30,6 +30,7 @@ const Quiz = ({navigation}) => {
 
   const handleNextPress = ()=> {
     setQues(ques + 1)
+    
     setOptions(generateOptionsAndShuffle(questions[ques+1]))
 
   }
@@ -63,8 +64,14 @@ const Quiz = ({navigation}) => {
 
   return (
     <View style={styles.container}>
+      <ImageBackground style={styles.imageBack} source={require('../assets/blue.jpeg')}>
       {questions&& (
       <View style={styles.parent}>
+        <View style={styles.currentScoreContainer}>
+          <Text style={styles.currentScore}>
+            {score}
+            </Text>
+        </View>
         <Text style={styles.secondaryText}>QUESTION {ques+1} OF 10</Text>
       <View style={styles.top}>
         <Text style={styles.question}>{decodeURIComponent(questions[ques].question)}</Text>
@@ -95,7 +102,8 @@ const Quiz = ({navigation}) => {
         </TouchableOpacity>}
 
       </View>
-      </View>)}     
+      </View>)}
+      </ImageBackground>     
     </View>
   )
 }
@@ -104,11 +112,7 @@ export default Quiz
 
 const styles = StyleSheet.create({
   container: {
-    paddingTop: 40,
-    paddingBottom:10,
-    paddingHorizontal: 10,
-    height: '100%',
-    backgroundColor: '#648DE5'
+    flex: 1
   },
   top: {
     marginVertical: 5
@@ -118,8 +122,6 @@ const styles = StyleSheet.create({
     flex: 1
   },
   bottom: {
-    marginBottom: 12,
-    paddingVertical: 16,
     justifyContent: 'space-between',
     flexDirection: 'row'
   },
@@ -127,9 +129,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#648DE5',
     padding: 12,
     paddingHorizontal: 16,
-    borderRadius: 16,
+    borderRadius: 15,
     alignItems: 'center',
-    marginBottom: 30,
     width: '100%'
   },
   buttonText: {
@@ -138,31 +139,61 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   question: {
-    fontSize: 28,
+    fontSize: 24,
+    fontWeight: 'bold'
   },
   option: {
     fontSize: 18,
-    fontWeight: '500',
-    color: 'white'
+    fontWeight: 'bold',
   },
   optionButton: {
     paddingVertical: 12,
     marginVertical: 6,
-    backgroundColor: '#648DE5',
+    borderColor: '#a6a6a6',
+    borderWidth: 1,
     paddingHorizontal: 12,
-    borderRadius: 12,
+    borderRadius: 15,
+  },
+  optionButtonPress: {
+    paddingVertical: 12,
+    marginVertical: 6,
+    borderColor: '#a6a6a6',
+    borderWidth: 1,
+    backgroundColor: '#a6a6a6',
+    paddingHorizontal: 12,
+    borderRadius: 15,
   },
   parent:{
-    height: '100%',
+    flex: 1,
     backgroundColor: '#FFFFFF',
     borderRadius: 30,
-    padding: 20
-
+    padding: 20,
   },
   secondaryText: {
     fontSize: 15,
     color: '#a6a6a6',
     fontWeight: 'bold'
+  },
+  imageBack: {
+    flex:1,
+    paddingHorizontal:10,
+    paddingBottom:10,
+    paddingTop: 40
+  },
+  currentScoreContainer: {
+    borderRadius: 60,
+    height: 60,
+    width: 60,
+    backgroundColor: '#FFBEEF',
+    alignSelf: 'center',
+    marginBottom: 30,
+    justifyContent: 'center'
+  },
+  currentScore: {
+    color: 'white',
+    fontWeight: 'bold',
+    fontSize: 25,
+    alignSelf: 'center'
   }
 
 })

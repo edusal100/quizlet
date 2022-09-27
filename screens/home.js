@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Image, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
 import React from 'react'
 import { StatusBar } from 'expo-status-bar'
@@ -6,18 +6,21 @@ import { StatusBar } from 'expo-status-bar'
 const Home = ({navigation}) => {
   return (
     <View style={styles.container}>
+      <ImageBackground style={styles.imageBack} source={require('../assets/blue.jpeg')}>
+      
       <View style={styles.bannerContainer}>
             <Image source={require('../assets/mainLogo.png')}
             style={styles.banner} resizeMode='contain'/>
       </View>
       <View style={styles.bottomContainer}>
-        <Text style={styles.bottomMsg}>This is Quizlet</Text>
-      <TouchableOpacity onPress={() => navigation.navigate("Quiz")} style={styles.button}>
-        <Text style={styles.buttonText}>Start</Text>
+        <Text style={styles.bottomMsg}>A QUIZ GAME FOR ALL AGES</Text>
+      <TouchableOpacity onPress={() => navigation.navigate("Selector")} style={styles.button}>
+        <Text style={styles.buttonText}>LET'S PLAY</Text>
       </TouchableOpacity>
       <Text style={styles.secondaryText}>By continuing you agree to have a damn fun</Text>
       <StatusBar style='light'/>
       </View>
+      </ImageBackground>
     </View>
   )
 }
@@ -35,10 +38,7 @@ const styles = StyleSheet.create({
       flex: 1,
     },
     container: {
-      paddingTop: 40,
-      paddingHorizontal: 10,
-      height: '100%',
-      backgroundColor: '#648DE5'
+      flex:1,
     },
     button: {
       widht: '100%',
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     },
     bottomMsg: {
       fontWeight: 'bold',
-      fontSize: 24,
+      fontSize: 20,
       marginHorizontal: 20,
       alignSelf: 'center'
     },
@@ -71,6 +71,13 @@ const styles = StyleSheet.create({
       fontSize: 15,
       color: '#a6a6a6',
       alignSelf: 'center'
+    },
+    logo: {
+      height: 40,
+        width: 400
+    },
+    imageBack: {
+      flex:1
     }
 
 })
