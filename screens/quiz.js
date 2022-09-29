@@ -9,15 +9,15 @@ const shuffleArray = (array) => {
 }
 
 
-const Quiz = ({navigation}) => {
-
+const Quiz = ({navigation, route}) => {
+  const {categoryId} = route.params
   const [questions, setQuestions] = useState();
   const [ques, setQues] = useState(0);
   const [options, setOptions] = useState([]);
   const [score, setScore] = useState(0);
 
   const getQuiz = async ()=> {
-    const url= 'https://opentdb.com/api.php?amount=10&difficulty=easy&type=multiple&encode=url3986';
+    const url= 'https://opentdb.com/api.php?amount=10&category='+ categoryId.id +'&difficulty=easy&type=multiple&encode=url3986';
     const res = await fetch (url);
     const data = await res.json();
     setQuestions(data.results)
@@ -72,6 +72,7 @@ const Quiz = ({navigation}) => {
             {score}
             </Text>
         </View>
+        <Text style={styles.categoryText}>{categoryId.name}</Text>
         <Text style={styles.secondaryText}>QUESTION {ques+1} OF 10</Text>
       <View style={styles.top}>
         <Text style={styles.question}>{decodeURIComponent(questions[ques].question)}</Text>
@@ -150,7 +151,7 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     marginVertical: 6,
     borderColor: '#a6a6a6',
-    borderWidth: 1,
+    borderWidth: 0.5,
     paddingHorizontal: 12,
     borderRadius: 15,
   },
@@ -194,6 +195,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 25,
     alignSelf: 'center'
+  },
+  categoryText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: '#808080'
   }
 
 })

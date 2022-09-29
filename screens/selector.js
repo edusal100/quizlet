@@ -1,11 +1,15 @@
-import { FlatList, Image, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { FlatList, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { useEffect, useState } from 'react';
 
 import CategoryItem from '../components/categoryItem';
 import React from 'react'
+import { setStatusBarBackgroundColor } from 'expo-status-bar';
 
-const Selector = () => {
+const Selector = ({navigation, route}) => {
+  
     const [listCategory, setListCategory] = useState();
+    const [selectedItem, setSelectedItem] = useState();
+    const [colorBg, setColorBg] = useState(false);
 
     const getCategory = async ()=> {
     const url= 'https://opentdb.com/api_category.php';
@@ -18,7 +22,11 @@ const Selector = () => {
     getCategory()
   }, [])
 
-  const renderItem = ({ item }) => <CategoryItem item={item}/>
+  const onSelected = (item) => {
+    setSelectedItem(item);
+}
+
+  const renderItem = ({ item }) => <CategoryItem item={item} onSelected={onSelected} />
 
   return (
     <View style={styles.container}>
@@ -34,7 +42,7 @@ const Selector = () => {
             keyExtractor={item => item.id.toString()}
             renderItem={renderItem}
           />   
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity style={styles.button} onPress={()=> navigation.navigate('Quiz', { categoryId: selectedItem })}>
           <Text style={styles.buttonText}>NEXT</Text>
         </TouchableOpacity>
 
@@ -60,8 +68,8 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: '#FFFFFF',
         borderRadius: 30,
-        padding: 20,
-        marginTop: 20
+        marginTop: 20,
+        padding: 10
       },
       title: {
         color: 'white',
@@ -71,14 +79,15 @@ const styles = StyleSheet.create({
       },
       button: {
         backgroundColor: '#648DE5',
-        padding: 12,
-        paddingHorizontal: 16,
-        borderRadius: 15,
+        paddingVertical: 18,
+        borderRadius: 20,
         alignItems: 'center',
-        width: '100%'
+        alignSelf: 'center',
+        width: '98%',
+        marginBottom: 5,
       },
       buttonText: {
-        fontSize: 18,
+        fontSize: 15,
         fontWeight: '600',
         color: 'white',
       },
