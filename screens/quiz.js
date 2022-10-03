@@ -10,14 +10,14 @@ const shuffleArray = (array) => {
 
 
 const Quiz = ({navigation, route}) => {
-  const {categoryId} = route.params
+  const {category} = route.params
   const [questions, setQuestions] = useState();
   const [ques, setQues] = useState(0);
   const [options, setOptions] = useState([]);
   const [score, setScore] = useState(0);
 
   const getQuiz = async ()=> {
-    const url= 'https://opentdb.com/api.php?amount=10&category='+ categoryId.id +'&difficulty=easy&type=multiple&encode=url3986';
+    const url= 'https://opentdb.com/api.php?amount=10&category='+ category.id +'&difficulty=easy&type=multiple&encode=url3986';
     const res = await fetch (url);
     const data = await res.json();
     setQuestions(data.results)
@@ -64,7 +64,7 @@ const Quiz = ({navigation, route}) => {
 
   return (
     <View style={styles.container}>
-      <ImageBackground style={styles.imageBack} source={require('../assets/blue.jpeg')}>
+      <ImageBackground style={styles.imageBack} source={require('../assets/mainBackground.png')}>
       {questions&& (
       <View style={styles.parent}>
         <View style={styles.currentScoreContainer}>
@@ -72,7 +72,7 @@ const Quiz = ({navigation, route}) => {
             {score}
             </Text>
         </View>
-        <Text style={styles.categoryText}>{categoryId.name}</Text>
+        <Text style={styles.categoryText}>{category.name}</Text>
         <Text style={styles.secondaryText}>QUESTION {ques+1} OF 10</Text>
       <View style={styles.top}>
         <Text style={styles.question}>{decodeURIComponent(questions[ques].question)}</Text>

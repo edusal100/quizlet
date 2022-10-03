@@ -1,23 +1,26 @@
 import { Image, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
+import { Colors } from '../constants/colors'
 import React from 'react'
 import { StatusBar } from 'expo-status-bar'
 
 const Home = ({navigation}) => {
   return (
     <View style={styles.container}>
-      <ImageBackground style={styles.imageBack} source={require('../assets/blue.jpeg')}>
-      
+      <ImageBackground style={styles.imageBack} source={require('../assets/mainBackground.png')}>
       <View style={styles.bannerContainer}>
             <Image source={require('../assets/mainLogo.png')}
             style={styles.banner} resizeMode='contain'/>
       </View>
       <View style={styles.bottomContainer}>
-        <Text style={styles.bottomMsg}>A QUIZ GAME FOR ALL AGES</Text>
+        <Text style={styles.bottomMsg}>A Quiz game for all ages</Text>
       <TouchableOpacity onPress={() => navigation.navigate("Selector")} style={styles.button}>
-        <Text style={styles.buttonText}>LET'S PLAY</Text>
+        <Text style={styles.buttonText}>Let's Play</Text>
       </TouchableOpacity>
-      <Text style={styles.secondaryText}>By continuing you agree to have a damn fun</Text>
+      <View style={styles.loginQuestionContainer}>
+      <Text style={styles.secondaryText}>Already have an account?</Text>
+      <Text style={styles.secondaryTextPurple}>Login</Text>
+      </View>
       <StatusBar style='light'/>
       </View>
       </ImageBackground>
@@ -42,20 +45,20 @@ const styles = StyleSheet.create({
     },
     button: {
       widht: '100%',
-      backgroundColor: '#648DE5',
-      padding: 16,
+      backgroundColor: Colors.main,
+      paddingVertical: 18,
       borderRadius: 22,
       alignItems: 'center',
       marginBottom: 15,
       marginTop: 30
     },
     buttonText: {
-      fontSize: 24,
+      fontSize: 18,
       fontWeight: '600',
       color: '#F8F8F9',
     },
     bottomContainer: {
-      backgroundColor:"#F8F8F9",
+      backgroundColor:"#FFFFFF",
       margin: 10,
       padding: 15,
       borderRadius: 20,
@@ -63,13 +66,21 @@ const styles = StyleSheet.create({
     },
     bottomMsg: {
       fontWeight: 'bold',
-      fontSize: 20,
+      fontSize: 22,
       marginHorizontal: 20,
       alignSelf: 'center'
     },
     secondaryText: {
-      fontSize: 15,
+      fontSize: 17,
       color: '#a6a6a6',
+      alignSelf: 'center',
+      marginEnd: 10,
+      fontWeight: '400'
+    },
+    secondaryTextPurple: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      color: Colors.main,
       alignSelf: 'center'
     },
     logo: {
@@ -78,6 +89,10 @@ const styles = StyleSheet.create({
     },
     imageBack: {
       flex:1
+    },
+    loginQuestionContainer: {
+      flexDirection: 'row',
+      alignSelf: 'center'
     }
 
 })
