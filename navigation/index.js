@@ -1,4 +1,6 @@
 import Home from '../screens/home';
+import HomeTab from './homeTab';
+import Login from '../screens/login';
 import Quiz from '../screens/quiz';
 import React from 'react';
 import Result from '../screens/result';
@@ -11,7 +13,8 @@ function MyStack() {
     
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Home" component={Home} options={{headerShown:false}} />
+      <Stack.Screen name="Login" component={Login} options={{headerShown:false}} />
+      <Stack.Screen name="HomeTab" component={HomeTab} options={{headerShown:false}}/>
       <Stack.Screen name="Quiz" component={Quiz} options={{headerShown:false}}/>
       <Stack.Screen name="Result" component={Result} options={{headerShown:false}}/>
       <Stack.Screen name="Selector" component={Selector} options={{headerShown:false}}/>
