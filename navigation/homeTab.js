@@ -10,8 +10,10 @@ const Tab = createBottomTabNavigator();
 
 const HomeTab = () => {
   return (
-      <Tab.Navigator
+      <Tab.Navigator    
       screenOptions={({ route }) => ({
+        tabBarShowLabel: false,
+        tabBarStyle: { position: 'absolute', borderRadius: 15, height: 60},
         headerShown: false,
         tabBarIcon: ({ focused, color, size }) => {
           let iconName;
@@ -28,7 +30,7 @@ const HomeTab = () => {
           return <Feather name={iconName} size={size} color={color} />;
         },
         tabBarActiveTintColor: 'black',
-        tabBarInactiveTintColor: 'gray',
+        tabBarInactiveTintColor: '#d3d3d3'
       })}
       >
         <Tab.Screen name='Home' component={Home} />
