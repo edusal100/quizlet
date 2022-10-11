@@ -1,6 +1,8 @@
 import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 
+import { useSelector } from 'react-redux';
+
 const shuffleArray = (array) => {
   for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -9,8 +11,8 @@ const shuffleArray = (array) => {
 }
 
 
-const Quiz = ({navigation, route}) => {
-  const {category} = route.params
+const Quiz = ({navigation}) => {
+  const {category} = useSelector(state => state.categoryReducer)
   const [questions, setQuestions] = useState();
   const [ques, setQues] = useState(0);
   const [options, setOptions] = useState([]);

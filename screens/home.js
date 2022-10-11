@@ -32,10 +32,8 @@ const Home = ({navigation}) => {
         </View>
         </View>
       </View>
-      <TouchableOpacity>
-        <Text onPress={() => navigation.navigate("Selector")}
-        style={{color:'white', fontStyle: 'bold', fontSize: 18, alignSelf: 'flex-end', marginTop: 20}}>
-          Play Game</Text>
+      <TouchableOpacity onPress={() => navigation.navigate('Selector')}>
+        <Text>Play</Text>
       </TouchableOpacity>
     </View>
   )

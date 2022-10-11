@@ -1,15 +1,17 @@
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 
 import CategoryItem from '../components/categoryItem';
 import { Colors } from '../constants/colors';
 import { ImageList } from '../data/imageList';
 import React from 'react'
+import { selectCategory } from '../redux/categorySlice';
 
-const Selector = ({navigation, route}) => {
-  
+const Selector = ({navigation}) => {
+    const dispatch = useDispatch();
+    const categories = useSelector((state)=> state.category.categories)
     const [listCategory, setListCategory] = useState();
-    const [selectedItem, setSelectedItem] = useState();
 
     const getCategory = async ()=> {
     const url= 'https://opentdb.com/api_category.php';
@@ -29,7 +31,7 @@ const Selector = ({navigation, route}) => {
   }, [])
 
   const onSelected = (item) => {
-    setSelectedItem(item);
+    dispatch(selectCategory(item));
 }
 
   const renderItem = ({ item }) => <CategoryItem item={item} onSelected={onSelected} />
@@ -47,7 +49,7 @@ const Selector = ({navigation, route}) => {
             keyExtractor={item => item.id.toString()}
             renderItem={renderItem}
           />   
-      <TouchableOpacity style={styles.button} onPress={()=> navigation.navigate('Quiz', { category: selectedItem })}>
+      <TouchableOpacity style={styles.button} onPress={()=> navigation.navigate('Quiz')}>
           <Text style={styles.buttonText}>NEXT</Text>
         </TouchableOpacity>
 
