@@ -1,5 +1,4 @@
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 
 import CategoryItem from '../components/categoryItem';
@@ -7,10 +6,10 @@ import { Colors } from '../constants/colors';
 import { ImageList } from '../data/imageList';
 import React from 'react'
 import { selectCategory } from '../redux/categorySlice';
+import { useDispatch } from 'react-redux';
 
 const Selector = ({navigation}) => {
     const dispatch = useDispatch();
-    const categories = useSelector((state)=> state.category.categories)
     const [listCategory, setListCategory] = useState();
 
     const getCategory = async ()=> {

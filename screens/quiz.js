@@ -11,8 +11,11 @@ const shuffleArray = (array) => {
 }
 
 
+
 const Quiz = ({navigation}) => {
-  const {category} = useSelector(state => state.categoryReducer)
+
+  const category = useSelector(state => state.category)
+
   const [questions, setQuestions] = useState();
   const [ques, setQues] = useState(0);
   const [options, setOptions] = useState([]);
