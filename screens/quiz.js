@@ -1,7 +1,8 @@
 import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 
-import { useSelector } from 'react-redux';
+import { updateScore } from '../redux/gameSlice';
 
 const shuffleArray = (array) => {
   for (let i = array.length - 1; i > 0; i--) {
@@ -10,16 +11,16 @@ const shuffleArray = (array) => {
   }
 }
 
-
-
 const Quiz = ({navigation}) => {
 
   const category = useSelector(state => state.category)
-
+  const score = useSelector(state => state.gameData)
+  const dispatch = useDispatch();
   const [questions, setQuestions] = useState();
   const [ques, setQues] = useState(0);
   const [options, setOptions] = useState([]);
-  const [score, setScore] = useState(0);
+  const [skipped, setSkipped] = useState (0);
+  
 
   const getQuiz = async ()=> {
     const url= 'https://opentdb.com/api.php?amount=10&category='+ category.id +'&difficulty=easy&type=multiple&encode=url3986';
@@ -35,9 +36,8 @@ const Quiz = ({navigation}) => {
 
   const handleNextPress = ()=> {
     setQues(ques + 1)
-    
     setOptions(generateOptionsAndShuffle(questions[ques+1]))
-
+    setSkipped(+1)
   }
 
   const generateOptionsAndShuffle = (_question) => {
@@ -49,22 +49,23 @@ const Quiz = ({navigation}) => {
   }
 
   const handleSelectedOption = (_option) => {
+    
     if(_option===questions[ques].correct_answer){
-      setScore(score+10)  
+      dispatch(updateScore(+10))
     }
     if(ques!==9){
-      setQues(ques + 1)
+      setTimeout(()=> {
+        setQues(ques + 1)
       setOptions(generateOptionsAndShuffle(questions[ques+1]))
+      },1000)
     }
     if(ques===9) {
-      handleShowResult()
+      
     }
   }
 
   const handleShowResult=()=>{
-    navigation.navigate('Result', {
-      score: score
-    })
+    navigation.navigate('Result')
   }
 
   return (
@@ -74,7 +75,7 @@ const Quiz = ({navigation}) => {
       <View style={styles.parent}>
         <View style={styles.currentScoreContainer}>
           <Text style={styles.currentScore}>
-            {score}
+            {score.value}
             </Text>
         </View>
         <Text style={styles.categoryText}>{category.name}</Text>

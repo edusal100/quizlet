@@ -1,4 +1,3 @@
-import Home from '../screens/home';
 import HomeTab from './homeTab';
 import Login from '../screens/login';
 import Quiz from '../screens/quiz';

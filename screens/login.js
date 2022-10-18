@@ -1,5 +1,6 @@
-import { Image, ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 
+import AnimatedLottieView from 'lottie-react-native'
 import { Colors } from '../constants/colors'
 import React from 'react'
 import { StatusBar } from 'expo-status-bar'
@@ -8,14 +9,15 @@ const Login = ({navigation}) => {
   return (
     <View style={styles.container}>
       <ImageBackground style={styles.imageBack} source={require('../assets/mainBackground.png')}>
-      <View style={styles.bannerContainer}>
-            <Image source={require('../assets/mainLogo.png')}
-            style={styles.banner} resizeMode='contain'/>
+      <View style={styles.animationContainer}>
+            <AnimatedLottieView
+              source={require('../assets/loginAnimation.json')} autoPlay loop style={{height:350}}
+            />
       </View>
       <View style={styles.bottomContainer}>
         <Text style={styles.bottomMsg}>A Quiz game for all ages</Text>
       <TouchableOpacity onPress={() => navigation.navigate("HomeTab")} style={styles.button}>
-        <Text style={styles.buttonText}>Let's Play</Text>
+        <Text style={styles.buttonText}>Sign Up</Text>
       </TouchableOpacity>
       <View style={styles.loginQuestionContainer}>
       <Text style={styles.secondaryText}>Already have an account?</Text>
@@ -31,14 +33,12 @@ const Login = ({navigation}) => {
 export default Login
 
 const styles = StyleSheet.create({
-    banner: {
-        height: 400,
-        width: 400
-    },
-    bannerContainer: {
-      justifyContent: 'center',
+    animationContainer: {
       alignItems: 'center',
+      justifyContent: 'center',
       flex: 1,
+      width: '100%',
+      marginTop: 150
     },
     container: {
       flex:1,
@@ -83,16 +83,12 @@ const styles = StyleSheet.create({
       color: Colors.main,
       alignSelf: 'center'
     },
-    logo: {
-      height: 40,
-        width: 400
-    },
     imageBack: {
       flex:1
     },
     loginQuestionContainer: {
       flexDirection: 'row',
       alignSelf: 'center'
-    }
+    },
 
 })

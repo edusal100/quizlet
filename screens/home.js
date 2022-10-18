@@ -1,22 +1,99 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Button, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { useEffect, useState } from 'react';
 
+import { Camera } from 'expo-camera'
 import {Colors} from '../constants/colors';
 import { Feather } from '@expo/vector-icons';
 import React from 'react'
 
 const Home = ({navigation}) => {
+  const [hasCameraPermission, setHasCameraPermission] = useState(null);
+  const [camera, setCamera] = useState(null);
+  const [image, setImage] = useState(null);
+  const [type, setType] = useState(Camera.Constants.Type.back);
+  const [startCamera, setStartCamera] = useState (false);
+
+  const [time, setTime] = useState();
+  const [greeting, setGreeting] = useState ();
+
+  const _startCamera = async () => {
+    const cameraStatus = await Camera.requestCameraPermissionsAsync();
+    setHasCameraPermission(cameraStatus.status === 'granted')
+    setStartCamera(true)
+  }
+
+  const takePicture = async () => {
+    if(camera){
+        const data = await camera.takePictureAsync(null)
+        setImage(data.uri);
+    }
+  }
+
+  const getTime = () => {
+    let today = new Date();
+    let hours = (today.getHours() < 10 ? '0' : '') + today.getHours();
+    setTime(hours)
+    hello(time)
+  }
+
+  const hello = (time) => {
+    if (time >= 5 &&  time <= 11) {
+      setGreeting("GOOD MORNING")
+    } if (time >11 && time <=6){
+      setGreeting("GOOD AFTERNOON")
+    } else {
+      setGreeting("GOOD NIGHT")
+    }
+  }
+
+  useEffect(()=>{
+    getTime()
+  }, [])
+
+  if (hasCameraPermission === false) {
+    return <Text>No access to camera</Text>
+  }
+  
   return (
-    <View style={styles.container}>
+    <View style={{flex: 1}}>
+    {startCamera ? (
+    <View style={{ flex: 1}}>
+       <View style={styles.cameraContainer}>
+             <Camera 
+             ref={ref => setCamera(ref)}
+             style={{flex: 1,width:"100%"}} 
+             type={type}
+               />
+       </View>
+       <View style={{flex: .2}}>
+       <Button
+             title="Flip Image"
+             onPress={() => {
+               setType(
+                 type === Camera.Constants.Type.back
+                   ? Camera.Constants.Type.front
+                   : Camera.Constants.Type.back
+               );
+             }}>
+         </Button>
+        <Button style={{marginBottom: 100}} title="Take Picture" onPress={() => takePicture()} />
+         {image && <Image source={{uri: image}} style={{flex:1}}/>}
+         </View>
+       
+    </View> ) : (
+      <View style={styles.container}>
       <View style={styles.topContainer}>
       <View>
       <View style={styles.greetingdayContainer}>
       <Feather name="sun" size={20} color={Colors.highlight} />
-      <Text style={styles.greeting}>GOOD MORNING</Text>
+      <Text style={styles.greeting}>{greeting}</Text>
       </View>
       <Text style={styles.greetingName}>Madelyn Dias</Text>
       </View>
+      <TouchableOpacity onPress={_startCamera}>
       <Image source={require('../assets/avatar.png')}
             style={styles.avatar} />
+            </TouchableOpacity>
       </View>
       <View style={styles.middleContainer}>
         <View style={styles.recentContainer}>
@@ -35,6 +112,8 @@ const Home = ({navigation}) => {
       <TouchableOpacity onPress={() => navigation.navigate('Selector')}>
         <Text>Play</Text>
       </TouchableOpacity>
+     </View>
+    )}
     </View>
   )
 }
@@ -50,7 +129,7 @@ const styles = StyleSheet.create({
       },
       greeting: {
         color: Colors.highlight,
-        fontSize: 15,
+        fontSize: 17,
         fontWeight: 'bold',
         marginStart: 10,
       },
@@ -111,6 +190,9 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         fontWeight: 'bold',
         fontSize: 16
-      }
+      },
+      cameraContainer: {
+        flex: 1,
+    }
       
 })
