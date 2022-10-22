@@ -1,9 +1,10 @@
-import React, { useState } from 'react'
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 
 import AnimatedLottieView from 'lottie-react-native'
 import { Colors } from '../constants/colors'
+import React from 'react'
+import { StatusBar } from 'expo-status-bar'
 import { resetScore } from '../redux/gameSlice';
 
 const Result = ({navigation}) => {
@@ -42,6 +43,7 @@ const Result = ({navigation}) => {
         <TouchableOpacity onPress={()=>{navigation.navigate("Home"); dispatch(resetScore())}} style={styles.button}>
           <Text style={{color:'white', fontWeight: 'bold', fontSize: 15}}>Done</Text>
         </TouchableOpacity>
+        <StatusBar style='dark'/>
     </View>
   )
 }
