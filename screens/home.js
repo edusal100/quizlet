@@ -39,7 +39,7 @@ const Home = ({navigation}) => {
   const hello = (time) => {
     if (time >= 5 &&  time <= 11) {
       setGreeting("GOOD MORNING")
-    } if (time >11 && time <=6){
+    } if (time >11 && time <=18){
       setGreeting("GOOD AFTERNOON")
     } else {
       setGreeting("GOOD NIGHT")
