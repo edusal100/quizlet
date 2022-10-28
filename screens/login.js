@@ -7,7 +7,7 @@ import { Feather } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import { openDatabase } from 'expo-sqlite';
 
-const db = openDatabase('mainDB')
+const db = openDatabase('mainDB');
 
 
 const Login = ({navigation}) => {
@@ -16,6 +16,7 @@ const Login = ({navigation}) => {
   const [name, setName] = useState();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
+  const [emailValidation, setEmailValidation] = useState();
 
   const changeScreen = () => {
     setSignUp(current => !current)
@@ -40,15 +41,16 @@ const Login = ({navigation}) => {
       db.transaction((tx) => {
         tx.executeSql(
           'SELECT Email, Name, Password FROM Users',
-          [],
-        )})
+          [], (tx, results) => {
+            setEmailValidation(results.rows._array)
+    })})
       } catch (error){
         console.log(error)
       }
   }
 
   const setData = async () => {
-    if(email.lenght == 0 || password.lenght == 0 || name.lenght == 0) {
+    if(!email || !password || !name ) {
       Alert.alert('Please enter all information')
     } else {
     try{
@@ -61,6 +63,15 @@ const Login = ({navigation}) => {
       } catch (error){
         console.log(error)
       }
+  }}
+
+  const login = () => {
+    if(!email || !password) {
+      Alert.alert('Please enter all information')
+    } else {
+    let obj = emailValidation.find(o => o.Email === email)
+    obj ? navigation.navigate("HomeTab") : Alert.alert('Please enter correct email address and password')
+      
   }}
 
 
@@ -131,7 +142,7 @@ const Login = ({navigation}) => {
         />
         </View>
         <Text style={{color: Colors.main, fontWeight: 'bold', alignSelf: 'flex-end', marginEnd:15, fontSize: 15}}>Forgot Password?</Text>
-      <TouchableOpacity onPress={() => navigation.navigate("HomeTab")} style={styles.button}>
+      <TouchableOpacity onPress={login} style={styles.button}>
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
       <View style={styles.loginQuestionContainer}>

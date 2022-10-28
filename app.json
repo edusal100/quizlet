@@ -34,13 +34,6 @@
       "eas": {
         "projectId": "5a0ce3c7-bbfd-44c2-a212-818b9d8a5289"
       }
-    },
-    "build": {
-      "preview": {
-      "android": {
-      "buildType": "apk"
-      }
-      }
-      } 
+    }
   }
 }
