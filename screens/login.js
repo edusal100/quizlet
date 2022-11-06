@@ -1,87 +1,93 @@
-import { Alert, ImageBackground, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { Alert, ImageBackground, Keyboard, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
+import {createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, updateProfile} from 'firebase/auth'
 
 import AnimatedLottieView from 'lottie-react-native'
 import { Colors } from '../constants/colors'
 import { Feather } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
-import { openDatabase } from 'expo-sqlite';
+import { firebaseConfig } from '../firebase-config'
+import {initializeApp} from 'firebase/app'
 
-const db = openDatabase('mainDB');
-
+const DismissKeyboard = ({ children }) => (
+  <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+    {children}
+  </TouchableWithoutFeedback>
+);
 
 const Login = ({navigation}) => {
-
   const [signUp, setSignUp] = useState(true);
   const [name, setName] = useState();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
-  const [emailValidation, setEmailValidation] = useState();
+  const [keyboardShow, setKeyboardShow] = useState();
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+
+  const handleCreateAccount = () => {
+    createUserWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      console.log('Account Created')
+      const user = userCredential.user;
+      updateProfile(user, {
+        displayName: name
+      })
+      console.log(user)
+      changeScreen()
+    })
+    .catch(error => {
+      console.log(error)
+      Alert.alert(error.message)
+    })
+  }
+
+  const handleSignIn = () => {
+    signInWithEmailAndPassword(auth, email, password)
+    .then((userCredential) => {
+      console.log('Signed In')
+      const user = userCredential.user;
+      console.log(user)
+      navigation.navigate('HomeTab')
+    })
+    .catch(error => {
+      console.log(error)
+    })
+  }
 
   const changeScreen = () => {
     setSignUp(current => !current)
   }
 
   useEffect(()=>{
-    createTable();
-    getData();
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      () => {
+        setKeyboardShow(true);
+      }
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      () => {
+        setKeyboardShow(false);
+      }
+    );
+
+    return () => {
+      keyboardDidHideListener.remove();
+      keyboardDidShowListener.remove();
+    };
   }, [])
-
-  const createTable = () => {
-    db.transaction((tx) => {
-      tx.executeSql(
-        'CREATE TABLE IF NOT EXISTS Users (Name TEXT NOT NULL, Email TEXT NOT NULL, Password INTEGER NOT NULL);'
-      )
-      console.log('table created')
-    })
-  }
-
-  const getData = () => {
-    try{
-      db.transaction((tx) => {
-        tx.executeSql(
-          'SELECT Email, Name, Password FROM Users',
-          [], (tx, results) => {
-            setEmailValidation(results.rows._array)
-    })})
-      } catch (error){
-        console.log(error)
-      }
-  }
-
-  const setData = async () => {
-    if(!email || !password || !name ) {
-      Alert.alert('Please enter all information')
-    } else {
-    try{
-       db.transaction(async (tx) => {
-       tx.executeSql(
-          'INSERT INTO Users (Email, Name, Password) VALUES (?,?,?)',
-          [email, name, password],
-          navigation.navigate("HomeTab")
-        )})
-      } catch (error){
-        console.log(error)
-      }
-  }}
-
-  const login = () => {
-    if(!email || !password) {
-      Alert.alert('Please enter all information')
-    } else {
-    let obj = emailValidation.find(o => o.Email === email)
-    obj ? navigation.navigate("HomeTab") : Alert.alert('Please enter correct email address and password')
-      
-  }}
 
 
   return (
+    <DismissKeyboard>
     <View style={styles.container}>
       <ImageBackground style={styles.imageBack} source={require('../assets/mainBackground.png')}>
       <View style={styles.animationContainer}>
-            <AnimatedLottieView
+      {!keyboardShow && <AnimatedLottieView
               source={require('../assets/loginAnimation.json')} autoPlay loop style={{height:350}}
-            />
+            />}
       </View>
      {signUp ? (
       <View style={styles.bottomContainer}>
@@ -112,7 +118,7 @@ const Login = ({navigation}) => {
         />
         </View>
         <Text style={styles.secondaryText}>By signing up, you agree to our Terms and conditions and Privacy Policy.</Text>
-      <TouchableOpacity style={styles.button} onPress={setData}>
+      <TouchableOpacity style={styles.button} onPress={handleCreateAccount}>
         <Text style={styles.buttonText}>Continue</Text>
       </TouchableOpacity>
       <View style={styles.loginQuestionContainer}>
@@ -142,7 +148,7 @@ const Login = ({navigation}) => {
         />
         </View>
         <Text style={{color: Colors.main, fontWeight: 'bold', alignSelf: 'flex-end', marginEnd:15, fontSize: 15}}>Forgot Password?</Text>
-      <TouchableOpacity onPress={login} style={styles.button}>
+      <TouchableOpacity onPress={handleSignIn} style={styles.button}>
         <Text style={styles.buttonText}>Login</Text>
       </TouchableOpacity>
       <View style={styles.loginQuestionContainer}>
@@ -153,12 +159,12 @@ const Login = ({navigation}) => {
       </TouchableOpacity>
       </View>
       </View>
-
       )} 
             
       <StatusBar style='light'/>
       </ImageBackground>
     </View>
+    </DismissKeyboard>
   )
 }
 

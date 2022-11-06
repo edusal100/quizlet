@@ -37,8 +37,9 @@ const Selector = ({navigation}) => {
 
   return (
     <View style={styles.container}>
+      {listCategory&&(
+        <View style={{flex:1}}>
         <Text style={styles.title}>Choose Category</Text>
-        {listCategory&&(
       <View style={styles.parent}>
           <FlatList
             showsVerticalScrollIndicator={false}
@@ -51,7 +52,7 @@ const Selector = ({navigation}) => {
       <TouchableOpacity style={styles.button} onPress={()=> navigation.navigate('Quiz')}>
           <Text style={styles.buttonText}>NEXT</Text>
         </TouchableOpacity>
-
+        </View>
         </View>)}
     </View>
   )

@@ -88,7 +88,7 @@ const Home = ({navigation}) => {
       <Feather name="sun" size={20} color={Colors.highlight} />
       <Text style={styles.greeting}>{greeting}</Text>
       </View>
-      <Text style={styles.greetingName}>Madelyn Dias</Text>
+      <Text style={styles.greetingName}>Eduardo</Text>
       </View>
       <TouchableOpacity onPress={_startCamera}>
       <Image source={require('../assets/avatar.png')}
