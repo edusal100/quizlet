@@ -1,4 +1,4 @@
-import { Alert, ImageBackground, Keyboard, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
+import { Alert, ImageBackground, Keyboard, Platform, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import {createUserWithEmailAndPassword, getAuth, signInWithEmailAndPassword, updateProfile} from 'firebase/auth'
 
@@ -16,7 +16,7 @@ const DismissKeyboard = ({ children }) => (
 );
 
 const Login = ({navigation}) => {
-  const [signUp, setSignUp] = useState(true);
+  const [signUp, setSignUp] = useState(false);
   const [name, setName] = useState();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
@@ -26,32 +26,30 @@ const Login = ({navigation}) => {
   const auth = getAuth(app);
 
   const handleCreateAccount = () => {
+    if(name && email && password){
     createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
-      console.log('Account Created')
       const user = userCredential.user;
       updateProfile(user, {
         displayName: name
       })
-      console.log(user)
       changeScreen()
     })
     .catch(error => {
       console.log(error)
       Alert.alert(error.message)
-    })
+    })} else {Alert.alert('Please enter complete information')}
   }
 
   const handleSignIn = () => {
     signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
-      console.log('Signed In')
       const user = userCredential.user;
-      console.log(user)
       navigation.navigate('HomeTab')
     })
     .catch(error => {
       console.log(error)
+      Alert.alert(error.message)
     })
   }
 
@@ -98,6 +96,7 @@ const Login = ({navigation}) => {
         style={styles.input}
         placeholder="Email"
         onChangeText={(value) => setEmail(value)}
+        autoCapitalize = 'none'
         />
         </View>
         <View style={{flexDirection:'row', alignItems: 'center', marginBottom:20, marginStart: 5}}>
@@ -136,6 +135,8 @@ const Login = ({navigation}) => {
         style={styles.input}
         placeholder="Email"
         onChangeText={(value) => setEmail(value)}
+        autoCapitalize = 'none'
+        keyboardType={Platform.OS === 'ios' ? 'default' : 'visible-password'}
         />
         </View>
         <View style={{flexDirection:'row', alignItems: 'center', marginBottom:20, marginStart: 5}}>

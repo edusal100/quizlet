@@ -1,4 +1,5 @@
 import { Button, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useEffect, useState } from 'react';
 
 import { Camera } from 'expo-camera'
@@ -12,9 +13,18 @@ const Home = ({navigation}) => {
   const [image, setImage] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [startCamera, setStartCamera] = useState (false);
-
+  const [name, setName] = useState ();
   const [time, setTime] = useState();
   const [greeting, setGreeting] = useState ();
+
+  const auth = getAuth();
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      const displayName = user.displayName;
+      setName(displayName)
+    } else {
+    }
+  });
 
   const _startCamera = async () => {
     const cameraStatus = await Camera.requestCameraPermissionsAsync();
@@ -31,24 +41,24 @@ const Home = ({navigation}) => {
 
   const getTime = () => {
     let today = new Date();
-    let hours = (today.getHours() < 10 ? '0' : '') + today.getHours();
+    let hours = today.getHours()
     setTime(hours)
     hello(time)
   }
 
   const hello = (time) => {
-    if (time >= 5 &&  time <= 11) {
+    if (time < 12) {
       setGreeting("GOOD MORNING")
-    } if (time >11 && time <=18){
+    } if (time >=12 && time <=17){
       setGreeting("GOOD AFTERNOON")
-    } else {
+    } else if(time >=18 && time <=24){
       setGreeting("GOOD NIGHT")
     }
   }
 
   useEffect(()=>{
     getTime()
-  }, [])
+  }, [time]);
 
   if (hasCameraPermission === false) {
     return <Text>No access to camera</Text>
@@ -85,10 +95,10 @@ const Home = ({navigation}) => {
       <View style={styles.topContainer}>
       <View>
       <View style={styles.greetingdayContainer}>
-      <Feather name="sun" size={20} color={Colors.highlight} />
+      <Feather name="sun" size={16} color={Colors.highlight} />
       <Text style={styles.greeting}>{greeting}</Text>
       </View>
-      <Text style={styles.greetingName}>Eduardo</Text>
+      <Text style={styles.greetingName}>{name}</Text>
       </View>
       <TouchableOpacity onPress={_startCamera}>
       <Image source={require('../assets/avatar.png')}
@@ -129,7 +139,7 @@ const styles = StyleSheet.create({
       },
       greeting: {
         color: Colors.highlight,
-        fontSize: 17,
+        fontSize: 14,
         fontWeight: 'bold',
         marginStart: 10,
       },
@@ -138,8 +148,8 @@ const styles = StyleSheet.create({
         alignItems: 'center'
       },
       greetingName: {
-        fontSize: 25,
-        fontWeight: 'bold',
+        fontSize: 24,
+        fontWeight: '600',
         color: 'white',
         marginTop: 5
       },

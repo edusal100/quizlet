@@ -2,6 +2,8 @@ import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 
+import AnimatedLottieView from 'lottie-react-native'
+import { Colors } from '../constants/colors';
 import { updateScore } from '../redux/gameSlice';
 
 const shuffleArray = (array) => {
@@ -20,6 +22,8 @@ const Quiz = ({navigation}) => {
   const [ques, setQues] = useState(0);
   const [options, setOptions] = useState([]);
   const [skipped, setSkipped] = useState (0);
+  const [selectedOptionCorrect, setSelectedOptionCorrect] = useState ()
+  const [selectedOptionIncorrect, setSelectedOptionIncorrect] = useState ()
   
 
   const getQuiz = async ()=> {
@@ -37,7 +41,6 @@ const Quiz = ({navigation}) => {
   const handleNextPress = ()=> {
     setQues(ques + 1)
     setOptions(generateOptionsAndShuffle(questions[ques+1]))
-    setSkipped(+1)
   }
 
   const generateOptionsAndShuffle = (_question) => {
@@ -48,14 +51,18 @@ const Quiz = ({navigation}) => {
     return options
   }
 
-  const handleSelectedOption = (_option) => {
+  const handleSelectedOption = (_option) => {  
     
     if(_option===questions[ques].correct_answer){
       dispatch(updateScore(+10))
-    }
+      setSelectedOptionCorrect(options.indexOf(_option))
+    } 
+    setSelectedOptionIncorrect(options.indexOf(_option))
     if(ques!==9){
       setTimeout(()=> {
-        setQues(ques + 1)
+      setQues(ques + 1)
+      setSelectedOptionCorrect(4)
+      setSelectedOptionIncorrect(4)
       setOptions(generateOptionsAndShuffle(questions[ques+1]))
       },1000)
     }
@@ -84,17 +91,25 @@ const Quiz = ({navigation}) => {
         <Text style={styles.question}>{decodeURIComponent(questions[ques].question)}</Text>
       </View>
       <View style={styles.options}>
-        <TouchableOpacity style={styles.optionButton} onPress={()=>handleSelectedOption(options[0])}>
+        <TouchableOpacity style={selectedOptionCorrect == 0 ? styles.optionButtonPressGreen : styles.optionButton} onPress={()=>handleSelectedOption(options[0])}>
           <Text style={styles.option}>{decodeURIComponent(options[0])}</Text>
+          {selectedOptionCorrect == 0 && (<AnimatedLottieView source={require('../assets/correct.json')} autoPlay loop style={styles.correctAnimation}
+            />)}
           </TouchableOpacity>
-        <TouchableOpacity style={styles.optionButton} onPress={()=>handleSelectedOption(options[1])}>
+        <TouchableOpacity style={selectedOptionCorrect == 1 ? styles.optionButtonPressGreen : styles.optionButton} onPress={()=>handleSelectedOption(options[1])}>
           <Text style={styles.option}>{decodeURIComponent(options[1])}</Text>
+          {selectedOptionCorrect == 1 && (<AnimatedLottieView source={require('../assets/correct.json')} autoPlay loop style={styles.correctAnimation}
+            />)}
           </TouchableOpacity>
-        <TouchableOpacity style={styles.optionButton} onPress={()=>handleSelectedOption(options[2])}>
+        <TouchableOpacity style={selectedOptionCorrect == 2 ? styles.optionButtonPressGreen : styles.optionButton} onPress={()=>handleSelectedOption(options[2])}>
           <Text style={styles.option}>{decodeURIComponent(options[2])}</Text>
+          {selectedOptionCorrect == 2 && (<AnimatedLottieView source={require('../assets/correct.json')} autoPlay loop style={styles.correctAnimation}
+            />)}
           </TouchableOpacity>
-        <TouchableOpacity style={styles.optionButton} onPress={()=>handleSelectedOption(options[3])}>
+        <TouchableOpacity style={selectedOptionCorrect == 3 ? styles.optionButtonPressGreen : styles.optionButton} onPress={()=>handleSelectedOption(options[3])}>
           <Text style={styles.option}>{decodeURIComponent(options[3])}</Text>
+          {selectedOptionCorrect == 3 && (<AnimatedLottieView source={require('../assets/correct.json')} autoPlay loop style={styles.correctAnimation}
+            />)}
           </TouchableOpacity>
       </View>
       <View style={styles.bottom}>
@@ -154,19 +169,33 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   optionButton: {
+    flexDirection: 'row',
     paddingVertical: 12,
     marginVertical: 6,
-    borderColor: '#a6a6a6',
+    borderColor: Colors.lightgray,
     borderWidth: 0.5,
     paddingHorizontal: 12,
     borderRadius: 15,
   },
-  optionButtonPress: {
-    paddingVertical: 12,
+  optionButtonPressGreen: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    maxHeight: 50,
     marginVertical: 6,
-    borderColor: '#a6a6a6',
+    borderColor: Colors.transparentgreen,
     borderWidth: 1,
-    backgroundColor: '#a6a6a6',
+    backgroundColor: Colors.transparentgreen,
+    paddingLeft: 12,
+    borderRadius: 15
+  },
+  optionButtonPressRed: {
+    flexDirection: 'row',
+    maxHeight: 55,
+    marginVertical: 6,
+    borderColor: Colors.lightgray,
+    borderWidth: 1,
+    backgroundColor: Colors.lightgray,
     paddingHorizontal: 12,
     borderRadius: 15,
   },
@@ -206,6 +235,10 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     color: '#808080'
+  },
+  correctAnimation: {
+    width: 100,
+    marginLeft: 15,
   }
 
 })

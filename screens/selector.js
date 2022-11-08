@@ -1,6 +1,7 @@
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { useEffect, useState } from 'react';
 
+import AnimatedLottieView from 'lottie-react-native'
 import CategoryItem from '../components/categoryItem';
 import { Colors } from '../constants/colors';
 import { ImageList } from '../data/imageList';
@@ -37,7 +38,7 @@ const Selector = ({navigation}) => {
 
   return (
     <View style={styles.container}>
-      {listCategory&&(
+      {listCategory ? (
         <View style={{flex:1}}>
         <Text style={styles.title}>Choose Category</Text>
       <View style={styles.parent}>
@@ -53,6 +54,10 @@ const Selector = ({navigation}) => {
           <Text style={styles.buttonText}>NEXT</Text>
         </TouchableOpacity>
         </View>
+        </View>): (
+          <View style={{flex:1, justifyContent: 'center', alignItems: 'center'}}>
+            <Text style={styles.loadingText}>Setting up your game</Text>
+            <AnimatedLottieView source={require('../assets/loginAnimation.json')} autoPlay loop style={{height:350}}/>
         </View>)}
     </View>
   )
@@ -97,6 +102,11 @@ const styles = StyleSheet.create({
       },
       categoryContainer: {
         flex: 1,
+      },
+      loadingText: {
+        color: 'white',
+        fontSize: 25,
+        fontWeight: 'bold'
       }
 
 })
