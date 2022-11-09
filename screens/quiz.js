@@ -56,15 +56,15 @@ const Quiz = ({navigation}) => {
     if(_option===questions[ques].correct_answer){
       dispatch(updateScore(+10))
       setSelectedOptionCorrect(options.indexOf(_option))
-    } 
-    setSelectedOptionIncorrect(options.indexOf(_option))
+    } else {setSelectedOptionIncorrect(options.indexOf(_option))}
+    
     if(ques!==9){
       setTimeout(()=> {
       setQues(ques + 1)
       setSelectedOptionCorrect(4)
       setSelectedOptionIncorrect(4)
       setOptions(generateOptionsAndShuffle(questions[ques+1]))
-      },1000)
+      },1500)
     }
     if(ques===9) {
       
@@ -91,24 +91,32 @@ const Quiz = ({navigation}) => {
         <Text style={styles.question}>{decodeURIComponent(questions[ques].question)}</Text>
       </View>
       <View style={styles.options}>
-        <TouchableOpacity style={selectedOptionCorrect == 0 ? styles.optionButtonPressGreen : styles.optionButton} onPress={()=>handleSelectedOption(options[0])}>
+        <TouchableOpacity style={selectedOptionCorrect == 0 ? styles.optionButtonPressGreen : selectedOptionIncorrect == 0 ? styles.optionButtonPressRed : styles.optionButton} onPress={()=>handleSelectedOption(options[0])}>
           <Text style={styles.option}>{decodeURIComponent(options[0])}</Text>
           {selectedOptionCorrect == 0 && (<AnimatedLottieView source={require('../assets/correct.json')} autoPlay loop style={styles.correctAnimation}
             />)}
+          {selectedOptionIncorrect == 0 && (<AnimatedLottieView source={require('../assets/incorrect.json')} autoPlay loop style={styles.incorrectAnimation}
+            />)}
           </TouchableOpacity>
-        <TouchableOpacity style={selectedOptionCorrect == 1 ? styles.optionButtonPressGreen : styles.optionButton} onPress={()=>handleSelectedOption(options[1])}>
+        <TouchableOpacity style={selectedOptionCorrect == 1 ? styles.optionButtonPressGreen : selectedOptionIncorrect == 1 ? styles.optionButtonPressRed: styles.optionButton} onPress={()=>handleSelectedOption(options[1])}>
           <Text style={styles.option}>{decodeURIComponent(options[1])}</Text>
           {selectedOptionCorrect == 1 && (<AnimatedLottieView source={require('../assets/correct.json')} autoPlay loop style={styles.correctAnimation}
             />)}
+          {selectedOptionIncorrect == 1 && (<AnimatedLottieView source={require('../assets/incorrect.json')} autoPlay loop style={styles.incorrectAnimation}
+            />)}
           </TouchableOpacity>
-        <TouchableOpacity style={selectedOptionCorrect == 2 ? styles.optionButtonPressGreen : styles.optionButton} onPress={()=>handleSelectedOption(options[2])}>
+        <TouchableOpacity style={selectedOptionCorrect == 2 ? styles.optionButtonPressGreen : selectedOptionIncorrect == 2 ? styles.optionButtonPressRed: styles.optionButton} onPress={()=>handleSelectedOption(options[2])}>
           <Text style={styles.option}>{decodeURIComponent(options[2])}</Text>
           {selectedOptionCorrect == 2 && (<AnimatedLottieView source={require('../assets/correct.json')} autoPlay loop style={styles.correctAnimation}
             />)}
+          {selectedOptionIncorrect == 2 && (<AnimatedLottieView source={require('../assets/incorrect.json')} autoPlay loop style={styles.incorrectAnimation}
+            />)}
           </TouchableOpacity>
-        <TouchableOpacity style={selectedOptionCorrect == 3 ? styles.optionButtonPressGreen : styles.optionButton} onPress={()=>handleSelectedOption(options[3])}>
+        <TouchableOpacity style={selectedOptionCorrect == 3 ? styles.optionButtonPressGreen : selectedOptionIncorrect == 3 ? styles.optionButtonPressRed: styles.optionButton} onPress={()=>handleSelectedOption(options[3])}>
           <Text style={styles.option}>{decodeURIComponent(options[3])}</Text>
           {selectedOptionCorrect == 3 && (<AnimatedLottieView source={require('../assets/correct.json')} autoPlay loop style={styles.correctAnimation}
+            />)}
+          {selectedOptionIncorrect == 3 && (<AnimatedLottieView source={require('../assets/incorrect.json')} autoPlay loop style={styles.incorrectAnimation}
             />)}
           </TouchableOpacity>
       </View>
@@ -191,12 +199,14 @@ const styles = StyleSheet.create({
   },
   optionButtonPressRed: {
     flexDirection: 'row',
-    maxHeight: 55,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    maxHeight: 50,
     marginVertical: 6,
-    borderColor: Colors.lightgray,
+    borderColor: Colors.transparentred,
     borderWidth: 1,
-    backgroundColor: Colors.lightgray,
-    paddingHorizontal: 12,
+    backgroundColor: Colors.transparentred,
+    paddingLeft: 12,
     borderRadius: 15,
   },
   parent:{
@@ -239,6 +249,10 @@ const styles = StyleSheet.create({
   correctAnimation: {
     width: 100,
     marginLeft: 15,
+  },
+  incorrectAnimation: {
+    width: 50,
   }
+  
 
 })
