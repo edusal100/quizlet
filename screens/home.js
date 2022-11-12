@@ -22,7 +22,6 @@ const Home = ({navigation}) => {
     if (user) {
       const displayName = user.displayName;
       setName(displayName)
-    } else {
     }
   });
 

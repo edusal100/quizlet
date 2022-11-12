@@ -9,7 +9,7 @@ const CategoryItem = ({item, onSelected}) => {
 
   const [questionsCount, setQuestionsCount] = useState();
   const [isActive, setIsActive] = useState(false);
-
+  
   const getQuestionsCount = async ()=> {
   const url= 'https://opentdb.com/api_count.php?category=' + item.id;
   const res = await fetch (url);

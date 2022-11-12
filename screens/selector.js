@@ -1,18 +1,19 @@
 import { FlatList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { clearCategory, selectCategory } from '../redux/categorySlice';
+import { useDispatch, useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
 
 import AnimatedLottieView from 'lottie-react-native'
 import CategoryItem from '../components/categoryItem';
 import { Colors } from '../constants/colors';
+import { Feather } from '@expo/vector-icons';
 import { ImageList } from '../data/imageList';
 import React from 'react'
-import { selectCategory } from '../redux/categorySlice';
-import { useDispatch } from 'react-redux';
 
 const Selector = ({navigation}) => {
     const dispatch = useDispatch();
     const [listCategory, setListCategory] = useState();
-
+    const category = useSelector(state => state.category)
     const getCategory = async ()=> {
     const url= 'https://opentdb.com/api_category.php';
     const res = await fetch (url);
@@ -32,6 +33,9 @@ const Selector = ({navigation}) => {
 
   const onSelected = (item) => {
     dispatch(selectCategory(item));
+    setTimeout(()=> {
+      navigation.navigate('Quiz')
+    },200)
 }
 
   const renderItem = ({ item }) => <CategoryItem item={item} onSelected={onSelected} />
@@ -50,8 +54,9 @@ const Selector = ({navigation}) => {
             keyExtractor={item => item.id.toString()}
             renderItem={renderItem}
           />   
-      <TouchableOpacity style={styles.button} onPress={()=> navigation.navigate('Quiz')}>
-          <Text style={styles.buttonText}>NEXT</Text>
+      <TouchableOpacity style={styles.button} onPress={()=> {dispatch(clearCategory()), navigation.navigate('Quiz')}}>
+          <Text style={styles.buttonText}>Random Category</Text>
+          <Feather name="refresh-ccw" size={24} color="white" />
         </TouchableOpacity>
         </View>
         </View>): (
@@ -87,6 +92,8 @@ const styles = StyleSheet.create({
         marginTop: 30
       },
       button: {
+        flexDirection: 'row',
+        justifyContent: 'center',
         backgroundColor: Colors.main,
         paddingVertical: 18,
         borderRadius: 20,
@@ -99,6 +106,7 @@ const styles = StyleSheet.create({
         fontSize: 15,
         fontWeight: '600',
         color: 'white',
+        marginRight: 20
       },
       categoryContainer: {
         flex: 1,

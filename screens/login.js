@@ -91,20 +91,20 @@ const Login = ({navigation}) => {
       <View style={styles.bottomContainer}>
         <Text style={styles.bottomMsg}>Sign up</Text>
         <View style={{flexDirection:'row', alignItems: 'center', marginBottom:20, marginStart: 5}}>
+        <Feather name='user' size={24} color={Colors.gray} />
+        <TextInput 
+        style={styles.input}
+        placeholder="Full name"
+        onChangeText={(value) => setName(value)}
+        />
+        </View>
+        <View style={{flexDirection:'row', alignItems: 'center', marginBottom:20, marginStart: 5}}>
         <Feather name='at-sign' size={24} color={Colors.gray} />
         <TextInput 
         style={styles.input}
         placeholder="Email"
         onChangeText={(value) => setEmail(value)}
         autoCapitalize = 'none'
-        />
-        </View>
-        <View style={{flexDirection:'row', alignItems: 'center', marginBottom:20, marginStart: 5}}>
-        <Feather name='user' size={24} color={Colors.gray} />
-        <TextInput 
-        style={styles.input}
-        placeholder="Full name"
-        onChangeText={(value) => setName(value)}
         />
         </View>
         <View style={{flexDirection:'row', alignItems: 'center', marginBottom:20, marginStart: 5}}>

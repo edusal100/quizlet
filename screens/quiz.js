@@ -24,14 +24,21 @@ const Quiz = ({navigation}) => {
   const [skipped, setSkipped] = useState (0);
   const [selectedOptionCorrect, setSelectedOptionCorrect] = useState ()
   const [selectedOptionIncorrect, setSelectedOptionIncorrect] = useState ()
-  
 
-  const getQuiz = async ()=> {
-    const url= 'https://opentdb.com/api.php?amount=10&category='+ category.id +'&difficulty=easy&type=multiple&encode=url3986';
-    const res = await fetch (url);
-    const data = await res.json();
-    setQuestions(data.results)
-    setOptions(generateOptionsAndShuffle (data.results[0]))
+
+  const getQuiz = async () => {
+    if(Object.keys(category).length === 0){
+      const url = 'https://opentdb.com/api.php?amount=10&difficulty=easy&type=multiple&encode=url3986'
+      const res = await fetch (url);
+      const data = await res.json();
+      setQuestions(data.results)
+      setOptions(generateOptionsAndShuffle (data.results[0]))} else {
+        const url = 'https://opentdb.com/api.php?amount=10&category='+ category.id +'&difficulty=easy&type=multiple&encode=url3986'
+        const res = await fetch (url);
+        const data = await res.json();
+        setQuestions(data.results)
+        setOptions(generateOptionsAndShuffle (data.results[0])) 
+      }
   }
 
   useEffect(()=>{
@@ -67,13 +74,16 @@ const Quiz = ({navigation}) => {
       },1500)
     }
     if(ques===9) {
-      
+      setTimeout(()=> {
+      handleShowResult()
+    },1500)
     }
   }
 
   const handleShowResult=()=>{
     navigation.navigate('Result')
   }
+
 
   return (
     <View style={styles.container}>
@@ -85,7 +95,7 @@ const Quiz = ({navigation}) => {
             {score.value}
             </Text>
         </View>
-        <Text style={styles.categoryText}>{category.name}</Text>
+        <Text style={styles.categoryText}>{ category ? decodeURIComponent(questions[ques].category): category.name}</Text>
         <Text style={styles.secondaryText}>QUESTION {ques+1} OF 10</Text>
       <View style={styles.top}>
         <Text style={styles.question}>{decodeURIComponent(questions[ques].question)}</Text>
@@ -121,16 +131,11 @@ const Quiz = ({navigation}) => {
           </TouchableOpacity>
       </View>
       <View style={styles.bottom}>
-
-    {ques !== 9 &&
-        <TouchableOpacity style={styles.button} onPress={handleNextPress}>
-          <Text style={styles.buttonText}>SKIP</Text>
-        </TouchableOpacity>}
-    {ques === 9 &&
-        <TouchableOpacity style={styles.button} onPress={handleShowResult}>
-          <Text style={styles.buttonText}>SHOW RESULTS</Text>
-        </TouchableOpacity>}
-
+        
+        <TouchableOpacity style={styles.button} onPress={ !ques===9 ? handleNextPress : handleShowResult }>
+          <Text style={styles.buttonText}>Skip</Text>
+        </TouchableOpacity>
+    
       </View>
       </View>)}
       </ImageBackground>     

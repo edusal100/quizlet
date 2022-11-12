@@ -12,10 +12,13 @@ const categorySlice = createSlice({
             return{
                 ...action.payload
             }
+        },
+        clearCategory: (state) => {
+            return [];
         }
     }
 })
 
-export const {selectCategory} = categorySlice.actions
+export const {selectCategory, clearCategory} = categorySlice.actions
 
 export default categorySlice.reducer
