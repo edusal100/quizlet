@@ -16,7 +16,7 @@ const DismissKeyboard = ({ children }) => (
 );
 
 const Login = ({navigation}) => {
-  const [signUp, setSignUp] = useState(false);
+  const [signUp, setSignUp] = useState();
   const [name, setName] = useState();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
@@ -89,7 +89,7 @@ const Login = ({navigation}) => {
       </View>
      {signUp ? (
       <View style={styles.bottomContainer}>
-        <Text style={styles.bottomMsg}>Sign up</Text>
+        <Text style={styles.bottomMsg}>Sign up</Text> 
         <View style={{flexDirection:'row', alignItems: 'center', marginBottom:20, marginStart: 5}}>
         <Feather name='user' size={24} color={Colors.gray} />
         <TextInput 
@@ -209,7 +209,7 @@ const styles = StyleSheet.create({
       fontSize: 35,
       marginHorizontal: 5,
       alignSelf: 'flex-start',
-      marginBottom: 40
+      marginBottom: 30
     },
     secondaryText: {
       fontSize: 17,
