@@ -7,7 +7,9 @@ import { Colors } from '../constants/colors'
 import { Feather } from '@expo/vector-icons';
 import { StatusBar } from 'expo-status-bar';
 import { firebaseConfig } from '../firebase-config'
-import {initializeApp} from 'firebase/app'
+import { initializeApp } from 'firebase/app'
+import { setUser } from '../redux/userSlice'
+import { useDispatch } from 'react-redux';
 
 const DismissKeyboard = ({ children }) => (
   <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
@@ -21,7 +23,7 @@ const Login = ({navigation}) => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [keyboardShow, setKeyboardShow] = useState();
-
+  const dispatch = useDispatch();
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
 
@@ -36,7 +38,6 @@ const Login = ({navigation}) => {
       changeScreen()
     })
     .catch(error => {
-      console.log(error)
       Alert.alert(error.message)
     })} else {Alert.alert('Please enter complete information')}
   }
@@ -45,10 +46,10 @@ const Login = ({navigation}) => {
     signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       const user = userCredential.user;
+      dispatch(setUser(user.uid))
       navigation.navigate('HomeTab')
     })
     .catch(error => {
-      console.log(error)
       Alert.alert(error.message)
     })
   }

@@ -1,9 +1,13 @@
 import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
+import { addDoc, arrayUnion, collection, doc, setDoc } from "firebase/firestore";
 import { useDispatch, useSelector } from 'react-redux';
 
 import AnimatedLottieView from 'lottie-react-native'
 import { Colors } from '../constants/colors';
+import { firebaseConfig } from '../firebase-config'
+import { getFirestore } from "firebase/firestore";
+import { initializeApp } from 'firebase/app'
 import { updateScore } from '../redux/gameSlice';
 
 const shuffleArray = (array) => {
@@ -14,8 +18,10 @@ const shuffleArray = (array) => {
 }
 
 const Quiz = ({navigation}) => {
-
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
   const category = useSelector(state => state.category)
+  const userId = useSelector(state => state.userData.user)
   const score = useSelector(state => state.gameData)
   const dispatch = useDispatch();
   const [questions, setQuestions] = useState();
@@ -24,7 +30,7 @@ const Quiz = ({navigation}) => {
   const [skipped, setSkipped] = useState (0);
   const [selectedOptionCorrect, setSelectedOptionCorrect] = useState ()
   const [selectedOptionIncorrect, setSelectedOptionIncorrect] = useState ()
-
+  const [gameId, setGameId] = useState()
 
   const getQuiz = async () => {
     if(Object.keys(category).length === 0){
@@ -32,12 +38,28 @@ const Quiz = ({navigation}) => {
       const res = await fetch (url);
       const data = await res.json();
       setQuestions(data.results)
-      setOptions(generateOptionsAndShuffle (data.results[0]))} else {
+      setOptions(generateOptionsAndShuffle (data.results[0]))
+        try {
+          const docRef = await addDoc(collection(db, 'games' + userId), {
+            gameType: 'Random'  
+      });
+      setGameId(docRef.id)
+    } catch (e) {
+    console.error("Error adding document: ", e); }
+    } else {
         const url = 'https://opentdb.com/api.php?amount=10&category='+ category.id +'&difficulty=easy&type=multiple&encode=url3986'
         const res = await fetch (url);
         const data = await res.json();
         setQuestions(data.results)
-        setOptions(generateOptionsAndShuffle (data.results[0])) 
+        setOptions(generateOptionsAndShuffle (data.results[0]))
+        try {
+          const docRef = await addDoc(collection(db, 'games'+ userId), {
+            gameType: category.name 
+      });
+      setGameId(docRef.id)
+    } catch (e) {
+    console.error("Error adding document: ", e); }    
+
       }
   }
 
@@ -58,12 +80,22 @@ const Quiz = ({navigation}) => {
     return options
   }
 
-  const handleSelectedOption = (_option) => {  
+  const handleSelectedOption = async (_option) => {  
     
     if(_option===questions[ques].correct_answer){
       dispatch(updateScore(+10))
       setSelectedOptionCorrect(options.indexOf(_option))
-    } else {setSelectedOptionIncorrect(options.indexOf(_option))}
+        const currentGame =  doc(db, 'games'+userId, gameId);
+        await setDoc(currentGame, {
+          correctAnswers: arrayUnion ( decodeURIComponent(_option))
+        },{merge: true});
+      
+    } else {
+      setSelectedOptionIncorrect(options.indexOf(_option))
+        const currentGame =  doc(db, 'games'+userId, gameId);
+        await setDoc(currentGame, {
+          incorrectAnswers: arrayUnion (decodeURIComponent(_option))
+      },{merge: true})};
     
     if(ques!==9){
       setTimeout(()=> {
